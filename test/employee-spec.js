@@ -3,10 +3,10 @@ const app = require('./../server');
 
 describe('CRUD /api/employee', () => {
 
-   let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2Mzg2MzkzNDJ9.5Cd8tchqucze6Cq0uCRga3oILE9mxtpje_zadNt9Sww";
-    const deleteEmployee = {"fname":"john ", "surname":"walash"}
-    const updateEmployee= {"fname":"john ", "surname":"walash", "company":"ibm", "email":"admin@ibm.com", "phone":"091456456"}
-    const newEmployee = {"fname":"john ", "surname":"walash", "company":"ibm", "email":"support@ibm.com", "phone":"091456456"}
+    let token = process.env.TEST_VAR;
+    const deleteEmployee = {"fname":"j", "surname":"w"}
+    const updateEmployee= {"fname":"j", "surname":"w", "company":"ibm", "email":"admin@ibm.com", "phone":"091456456"}
+    const newEmployee = {"fname":"j", "surname":"w", "company":"ibm", "email":"support@ibm.com", "phone":"091456456"}
     const newCompany = {"name":"ibm","email":"support@tstCompany.com","phone":"091456456","website":"tstCompany.com"}
 
     it("GET /api/employee should return list of employee with status 200", async () => {
@@ -30,7 +30,6 @@ describe('CRUD /api/employee', () => {
     it("DELETE /api/employee DELETE employee", async () => {
 
        const res = await request(app).delete('/api/employee').auth(token, { type: 'bearer' }).send(deleteEmployee)
-       expect(res.statusCode).toEqual(400)
-     
+       expect(res.statusCode).toEqual(200)   
     })
 });
