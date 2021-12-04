@@ -39,13 +39,13 @@ Make sure you have latest NodeJS installed.
 2. Need to update database settings in dbconfig.js and create a db.
 3. cd folder-name && npm install and npm start.
 4. Go to http://localhost:8080/api/docs.
-5. Once running to need to generate an auth authentication and update the variable(process.env.TEST_VAR) in the server.js file to run the tests.
+5. TO RUN TESTS: Once running to need to generate an auth authentication and update the variable(process.env.TEST_VAR) in the server.js file to run the tests.
 
 ### Commands
 
 1. NPM start - Starts the app
-2. NPM run dev - starts the app in dev mode
-3. NPM test - runs the integration tests
+2. NPM run dev - Starts the app in dev mode
+3. NPM test - Runs the integration tests
 
 ### URLs
 
