@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const authenticateToken = require("./..//middleware/authenticate");
 const config = require("./../config/config.json");
 const db = require("./../models");
-const Employee = db.employee;
+const Employee = db.employees;
 const {body, validationResult} = require('express-validator');
 
 /**
@@ -160,7 +160,7 @@ router.put('/employee',
   })
    .then(num => {
       if (num == 1) {
-        res.status(204).send({
+        res.status(200).send({
           message: "Employee data was updated successfully."
         });
       } else {
@@ -205,9 +205,7 @@ router.put('/employee',
  *         200: 
  *           description: Deletes employee  
  *         400:
- *           description: Validation error
- *         402:
- *           description: Problem with name provided      
+ *           description: Validation error 
  */
 router.delete('/employee', authenticateToken, (req, res) => {
   const { fname } = req.body.fname;
@@ -225,16 +223,16 @@ router.delete('/employee', authenticateToken, (req, res) => {
           message: "Employee was deleted successfully!"
         });
       } else {
-        res.status(402).send({
+        res.status(400).send({
           success: false,
-          message: "Cannot update employee with name="+fname+surname
+          message: "Cannot delete employee with name="+fname+surname
         });
       }
     })
     .catch(err => {
       res.status(500).send({
         success: false,
-        message: "Error updating employee with name="+fname+surname
+        message: "Error delete employee with name="+fname+surname
       });
     });
  

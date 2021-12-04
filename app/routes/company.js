@@ -129,7 +129,7 @@ router.get('/company', authenticateToken, (req, res) => {
  *               website:
  *                 type: string
  *       responses:
- *         204: 
+ *         200: 
  *           description: Updates company  
  *         400:
  *           description: Validation error
@@ -139,7 +139,7 @@ router.get('/company', authenticateToken, (req, res) => {
 router.put('/company',  
           body('name').not().isEmpty().withMessage('Name must not be emty to update'),
           authenticateToken, (req, res) => {         
-  const { name } = req.body.name;
+  const name = req.body.name;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -150,11 +150,11 @@ router.put('/company',
   }
 
   Companies.update(req.body, {
-    where: { name: name }
+    where: { name: req.body.name }
   })
   .then(num => {
-    if (num == 1) {
-        res.status(204).send({
+    if (num == 1) {   
+        res.status(200).send({  
           message: "Company data was updated successfully."
         });
       } else {
@@ -196,9 +196,7 @@ router.put('/company',
  *         200: 
  *           description: Deletes company  
  *         400:
- *           description: Validation error
- *         402:
- *           description: Problem with name provided      
+ *           description: Validation error   
  */
 router.delete('/company',
             body('name').not().isEmpty().withMessage('Name must not be emty'),
@@ -221,13 +219,12 @@ router.delete('/company',
       .then(num => {
           if (num == 1) {
               res.status(200).send({
-                  success: false,
                   message: "Company was deleted successfully!"
               });
           } else {
-              res.status(402).send({
+              res.status(400).send({
                   success: false,
-                  message: `Cannot delete company with name=${name}.`
+                  message: `Cannot delete company with name=${name}. It may not already exist`
               });
           }
       })
