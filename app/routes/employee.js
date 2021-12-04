@@ -5,88 +5,158 @@ const authenticateToken = require("./..//middleware/authenticate");
 const config = require("./../config/config.json");
 const db = require("./../models");
 const Employee = db.employee;
+const {body, validationResult} = require('express-validator');
 
- /** 
- * @swagger 
- * /Employee: 
- *   post: 
- *     tags:
+/**
+ * @swagger
+ * /employee:
+ *     post:
+ *       tags:
  *        - Employee
- *     description: Creates an employee 
- *     parameters: 
- *     - name: fname 
- *       description: The employee first name 
- *       required: true 
- *       type: String 
- *     - name: surname 
- *       description: The employees company 
- *       type: String 
- *     - name: phone 
- *       description: The employee phone
- *       type: String 
- *     - name: website 
- *       description: The employee phone 
- *       type: String 
- *     responses:  
- *       201: 
- *         description: Created  
- *   
+ *       summary: Creates a new employee.
+ *       consumes:
+ *         - application/json
+ *       parameters:
+ *         - in: body
+ *           name: employee
+ *           description: The employee to create.
+ *           schema:
+ *             type: object
+ *             required:
+ *             - fname
+ *             - surname
+ *             properties:
+ *               fname:
+ *                 type: string
+ *               surname:
+ *                 type: string
+ *               company:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *       responses:
+ *         201:
+ *           description: Created
+ *         200:
+ *           description: Employee Exists      
+ *         400:
+ *           description: Validation error
  */  
-router.post('/employee', authenticateToken, (req, res) => {
-  Employee.create(req.body)
-    .then(data => {
-      res.status(201).send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the companies."
+router.post('/employee', 
+  body('fname').not().isEmpty().withMessage('First name must not be emty'),
+  body('surname').not().isEmpty().withMessage('Surname must not be emty'),
+  authenticateToken, (req, res) => {
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+      return res.status(400).json({
+          success: false,
+          error: errors.array()
       });
-    });
+  }
+
+  Employee.findOne({
+          where: {
+              fname: req.body.fname,
+              surname: req.body.surname
+          }
+      })
+      .then(function(obj) {
+          if (obj) {
+              return res.status(200).send("This employee already exists");
+          }
+          return Employee.create(req.body)
+              .then(data => {
+                  res.status(201).send(data);
+              })
+              .catch(err => {
+                  res.status(500).send({
+                      success: false,
+                      message: err.message + " occurred while creating the employee."
+                  });
+              });
+      })
 });
 
- /** 
+/** 
  * @swagger 
- * /Employee: 
+ * /employee: 
  *   get: 
  *     tags:
- *        - Employee
- *     description: Gets all employees 
+ *      - Employee
+ *     summary: Gets all employees.
+ *     description: Gets all employees
+ *     produces:
+ *         - application/json
  *     responses:  
  *       200: 
  *         description: Returns all employees
  */  
 router.get('/employee', authenticateToken, (req, res) => {
   Employee.findAll()
-    .then(data => {
-      res.status(200).send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the employee."
+      .then(data => {
+          res.status(200).send(data);
+      })
+      .catch(err => {
+          res.status(500).send({
+              success: false,
+              message: err.message + " occurred while creating the employees."
+          });
       });
-    });
 });
 
- /** 
- * @swagger 
- * /Employee: 
- *   put: 
- *     tags:
+ /**
+ * @swagger
+ * /employee:
+ *     put:
+ *       tags:
  *        - Employee
- *     description: Gets employee by email
- *     parameters: 
- *     - name: Employee object
- *     responses:  
- *       204: 
- *         description: Updates employee  
- */  
-router.put('/employee', authenticateToken, (req, res) => {
-  const { email } = req.body.email;
- 
+ *       summary: Update employee by first name and surname.
+ *       consumes:
+ *         - application/json
+ *       parameters:
+ *         - in: body
+ *           name: employee
+ *           description: Update employee to details.
+ *           schema:
+ *             type: object
+ *             required:
+ *             - fname
+ *             - surname
+ *             properties:
+ *               fname:
+ *                 type: string
+ *               surname:
+ *                 type: string
+ *               company:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *       responses:
+ *         204: 
+ *           description: Updates employee  
+ *         400:
+ *           description: Validation error
+ *         402:
+ *           description: Problem with name provided      
+ */
+router.put('/employee', 
+            body('fname').not().isEmpty().withMessage('First name must not be emty'),
+            body('surname').not().isEmpty().withMessage('Surname must not be emty'),
+            authenticateToken, (req, res) => {
+  const { fname } = req.body.fname;
+  const { surname } = req.body.surname;
+
   Employee.update(req.body, {
-    where: { email: email }
+    where: {
+      fname: req.body.fname,
+      surname: req.body.surname
+    }
   })
    .then(num => {
       if (num == 1) {
@@ -95,38 +165,59 @@ router.put('/employee', authenticateToken, (req, res) => {
         });
       } else {
         res.status(402).send({
-          message: `Cannot update employee with email=${email}!`
+          success: false,
+          message: "Cannot update employee with name="+fname+surname
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error updating employee with email=" + email
+        success: false,
+        message: "Error updating employee with name="+fname+surname
       });
     });
 });
 
- /** 
- * @swagger 
- * /Employee: 
- *   delete: 
- *     tags:
+/**
+ * @swagger
+ * /employee:
+ *     delete:
+ *       tags:
  *        - Employee
- *     description: Delete employee by email
- *     parameters: 
- *     - name: id 
- *       description: Employee by email
- *       required: true 
- *       type: String 
- *     responses:  
- *       200: 
- *         description: Delete employee 
- */  
+ *       summary: Delete employee by name.
+ *       consumes:
+ *         - application/json
+ *       parameters:
+ *         - in: body
+ *           name: employee
+ *           description: Delete employee to details.
+ *           schema:
+ *             type: object
+ *             required:
+ *             - fname
+ *             - surname
+ *             properties:
+ *               fname:
+ *                 type: string
+ *               surname:
+ *                 type: string
+ *       responses:
+ *         200: 
+ *           description: Deletes employee  
+ *         400:
+ *           description: Validation error
+ *         402:
+ *           description: Problem with name provided      
+ */
 router.delete('/employee', authenticateToken, (req, res) => {
-  const email  = req.body.email;
+  const { fname } = req.body.fname;
+  const { surname } = req.body.surname;
 
  Employee.destroy({
-    where: { email: email }
+    where: {
+      fname: req.body.fname,
+      surname: req.body.surname
+    }
   })
     .then(num => {
       if (num == 1) {
@@ -135,13 +226,15 @@ router.delete('/employee', authenticateToken, (req, res) => {
         });
       } else {
         res.status(402).send({
-          message: `Cannot delete employee with email=${email}.`
+          success: false,
+          message: "Cannot update employee with name="+fname+surname
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Could not delete employee with email=" + email
+        success: false,
+        message: "Error updating employee with name="+fname+surname
       });
     });
  
