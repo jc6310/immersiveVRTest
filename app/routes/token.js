@@ -29,18 +29,22 @@ const config = require("./../config/config.json");
  *           description: Validation error
  */
 router.post('/authentication', (req, res) => {
-    const { role } = req.body;
+    const {
+        role
+    } = req.body;
 
     if (role === "admin") {
-        const accessToken = jwt.sign({ role: role }, config.accessSecretToken);
+        const accessToken = jwt.sign({
+            role: role
+        }, config.accessSecretToken);
         res.json({
             accessToken,
-            role:role
+            role: role
         });
     } else {
         res.status(400).send({
-          success: false,
-          message: "Role is invalid"
+            success: false,
+            message: "Role is invalid"
         });
     }
 });

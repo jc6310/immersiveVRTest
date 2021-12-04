@@ -6,15 +6,18 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-        return res.status(403).send({ message: "No token provided!" });
+        return res.status(403).send({
+            success: false,
+            message: "No token provided!"
+        });
     }
-    
+
     if (authHeader) {
         const token = authHeader.split(' ')[1];
 
         jwt.verify(token, config.accessSecretToken, (err, user) => {
             if (err) {
-                 return catchError(err, res);
+                return catchError(err, res);
             }
 
             req.user = user;
@@ -26,11 +29,17 @@ const authenticateToken = (req, res, next) => {
 };
 
 const catchError = (err, res) => {
-  if (err instanceof TokenExpiredError) {
-    return res.status(401).send({ message: "Access Token has expired! Access Denied" });
-  }
+    if (err instanceof TokenExpiredError) {
+        return res.status(401).send({
+            success: false,
+            message: "Access Token has expired! Access Denied"
+        });
+    }
 
-  return res.status(401).send({ message: "Unauthorized! Access Denied" });
+    return res.status(401).send({
+        success: false,
+        message: "Unauthorized! Access Denied"
+    });
 }
 
 module.exports = authenticateToken;
