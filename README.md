@@ -17,6 +17,17 @@ This assessment Api for ImmersiveVR using Node, Express, Sequelize, and JWT with
 
 ___
 
+### Whats Done
+
+1. Basic JWT Authentication: ability to log in as administrator. (Done JWT auth implemented)
+3. Create DB tables Companies and Employees as stated in the word doc. (Done)
+2. Create CRUD for Companies and Employees. (Done - API exposed for this)
+3. Use Express validation middleware. (Done)
+4. Implemet Express middleware to enforce authorisation. (Done)
+5. Add swagger.(Done)
+6. Create Integration tests for API’s. (Done - basic integration tests)
+7. Provide README file. (Done)
+___
 
 ### Install
 
@@ -28,9 +39,21 @@ Make sure you have latest NodeJS installed.
 2. Need to update database settings in dbconfig.js and create a db.
 3. cd folder-name && npm install and npm start.
 4. Go to http://localhost:8080/api/docs.
+5. Once running to need to generate an auth authentication and update the variable(process.env.TEST_VAR) in the server.js file to run the tests.
 
+### Commands
+
+1. NPM start - Starts the app
+2. NPM run dev - starts the app in dev mode
+3. NPM test - runs the integration tests
+
+### URLs
+
+1. http://localhost:8080/api/docs/ -- swagger
+2. http://localhost:8080/api/authentication -- authentication for token
+3. http://localhost:8080/api/employee -- CRUD for employee
+4. http://localhost:8080/api/company -- CRUD for company
 ___
-
 
 ### License
 
