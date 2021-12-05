@@ -44,9 +44,16 @@ Make sure you have latest NodeJS installed.
 ### Generate Auth Token
 
 1. To generate a auth token. Using postman do a postman request to http://localhost:8080/api/authentication passing in a body. Note the token in the response.
-2. Then to call other API use the auth token.
+2. Then to call other API use the auth token as shown in below image.
 
 ![Postman using auth token](https://github.com/jc6310/immersiveVRTest/blob/main/img/postman-auth-token.png?raw=true "Postman using auth token")
+
+### Generate Auth Token
+
+1. With the auth token uou need to update the variable (process.env.TEST_VAR) in the server.js file to run the tests.
+2. Then command NPM test starts the tests.
+
+![Test success](https://github.com/jc6310/immersiveVRTest/blob/main/img/test%20success.png?raw=true "Test success")
 
 ### Commands
 
