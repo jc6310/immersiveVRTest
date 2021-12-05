@@ -35,11 +35,18 @@ Make sure you have latest NodeJS installed.
 
 ### Installing
 
-1. git clone https://github.com/jc6310/immersiveVRTest.git
-2. Need to update database settings in dbconfig.js and create a db.
+1. Run git command to download repo. git clone https://github.com/jc6310/immersiveVRTest.git
+2. Need to update database settings in config/dbconfig.js and create a db.
 3. cd folder-name && npm install and npm start.
-4. Go to http://localhost:8080/api/docs.
-5. TO RUN TESTS: Once running to need to generate an auth authentication and update the variable(process.env.TEST_VAR) in the server.js file to run the tests.
+4. Go to http://localhost:8080/api/docs. That it up and running.
+5. TO RUN TESTS: Once up and running to need to generate an auth authentication and update the variable(process.env.TEST_VAR) in the server.js file to run the tests.
+
+### Generate Auth Token
+
+1. To generate a auth token. Using postman do a postman request to http://localhost:8080/api/authentication passing in a body. Note the token in the response.
+2. Then to call other API use the auth token.
+
+![Postman using auth token](https://github.com/jc6310/immersiveVRTest/blob/main/test/postman-auth-token.png?raw=true "Postman using auth token")
 
 ### Commands
 
@@ -49,8 +56,8 @@ Make sure you have latest NodeJS installed.
 
 ### URLs
 
-1. http://localhost:8080/api/docs/ -- swagger
-2. http://localhost:8080/api/authentication -- authentication for token
+1. http://localhost:8080/api/docs/ -- Swagger
+2. http://localhost:8080/api/authentication -- Authentication for token
 3. http://localhost:8080/api/employee -- CRUD for employee
 4. http://localhost:8080/api/company -- CRUD for company
 ___
