@@ -46,7 +46,7 @@ Make sure you have latest NodeJS installed.
 1. To generate a auth token. Using postman do a postman request to http://localhost:8080/api/authentication passing in a body. Note the token in the response.
 2. Then to call other API use the auth token.
 
-![Postman using auth token](https://github.com/jc6310/immersiveVRTest/blob/main/test/postman-auth-token.png?raw=true "Postman using auth token")
+![Postman using auth token](https://github.com/jc6310/immersiveVRTest/blob/main/img/postman-auth-token.png?raw=true "Postman using auth token")
 
 ### Commands
 
